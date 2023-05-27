@@ -28,6 +28,7 @@ pipeline {
 
                 sh '''
                     set +x
+                    cd MulticloudInfrastructureAutomation/SetupInfra
                     terraform init --var="aws_access_key=$AWS_CREDS_USR" --var="aws_secret_key=$AWS_CREDS_PSW" --var="azure_subscription_id=$AZ_SUB_TENANT_CREDS_USR" --var="azure_client_id=$AZ_CLIENT_SECRET_CREDS_USR"  --var="azure_client_secret=$AZ_CLIENT_SECRET_CREDS_PSW" --var="azure_tenant_id=$AZ_SUB_TENANT_CREDS_PSW" --var="postgresdb_password=$DB_CREDS_PSW" --var="postgresdb_user=$DB_CREDS_USR"  -backend-config="access_key=$AWS_CREDS_USR" -backend-config="secret_key=$AWS_CREDS_PSW" -backend-config="region=us-east-1" -backend-config="bucket=awsterraformbackendstatebucket" -backend-config="key=awsterraformbackendstatebucket"
                 '''
             }
@@ -37,6 +38,7 @@ pipeline {
             steps {
                 sh '''
                     set +x
+                    cd MulticloudInfrastructureAutomation/SetupInfra
                     terraform validate
                 '''
             }
@@ -47,6 +49,7 @@ pipeline {
 
                 sh '''
                     set +x
+                    cd MulticloudInfrastructureAutomation/SetupInfra
                     terraform plan -var-file="resources_dev.tfvars" --var="aws_access_key=$AWS_CREDS_USR" --var="aws_secret_key=$AWS_CREDS_PSW" --var="azure_subscription_id=$AZ_SUB_TENANT_CREDS_USR" --var="azure_client_id=$AZ_CLIENT_SECRET_CREDS_USR"  --var="azure_client_secret=$AZ_CLIENT_SECRET_CREDS_PSW" --var="azure_tenant_id=$AZ_SUB_TENANT_CREDS_PSW" --var="postgresdb_password=$DB_CREDS_PSW" --var="postgresdb_user=$DB_CREDS_USR"
                 '''
             }
@@ -57,6 +60,7 @@ pipeline {
                 
                 sh '''
                     set +x
+                    cd MulticloudInfrastructureAutomation/SetupInfra
                     terraform ${action} --auto-approve -var-file="resources_dev.tfvars" --var="aws_access_key=$AWS_CREDS_USR" --var="aws_secret_key=$AWS_CREDS_PSW" --var="azure_subscription_id=$AZ_SUB_TENANT_CREDS_USR" --var="azure_client_id=$AZ_CLIENT_SECRET_CREDS_USR"  --var="azure_client_secret=$AZ_CLIENT_SECRET_CREDS_PSW" --var="azure_tenant_id=$AZ_SUB_TENANT_CREDS_PSW" --var="postgresdb_password=$DB_CREDS_PSW" --var="postgresdb_user=$DB_CREDS_USR"
                 '''
                 

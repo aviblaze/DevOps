@@ -12,7 +12,14 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://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@github.com/aviblaze/DevOps/tree/main/MulticloudInfrastructureAutomation/SetupInfra'
+                //git branch: 'main', url: 'https://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@github.com/aviblaze/DevOps/tree/main/MulticloudInfrastructureAutomation/SetupInfra'
+                checkout([$class: 'GitSCM', 
+                branches: [[name: '*/main']],
+                extensions: [
+                    [$class: 'SparseCheckoutPaths', 
+                    sparseCheckoutPaths:[[$class:'SparseCheckoutPath', path:'MulticloudInfrastructureAutomation/SetupInfra']]]
+                    ],
+                userRemoteConfigs: [[url: 'https://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@github.com/aviblaze/DevOps.git']]])
             }
         }
         stage('Terraform init') {

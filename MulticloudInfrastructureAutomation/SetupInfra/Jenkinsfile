@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://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@github.com/SummitAIOrchs/IACUsing_Git_Jenkins_Terraform'
+                git branch: 'main', url: 'https://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@github.com/aviblaze/DevOps/tree/main/MulticloudInfrastructureAutomation/SetupInfra'
             }
         }
         stage('Terraform init') {
@@ -36,33 +36,22 @@ pipeline {
 
         stage('Terraform plan') {
             steps {
-                withCredentials([
-                    usernamePassword(usernameVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'awsCreds', passwordVariable: 'AWS_SECRET_ACCESS_KEY'),
-                    usernamePassword(usernameVariable : 'AZ_SUBSCRIPTION_ID', credentialsId: 'azsubTenantCreds', passwordVariable : 'AZ_TENANT_ID'),
-                    usernamePassword(usernameVariable : 'AZ_CLIENT_ID', credentialsId: 'azClientSecretCreds', passwordVariable : 'AZ_CLIENT_SECRET'),
-                    usernamePassword(usernameVariable : 'DB_USERNAME', credentialsId: 'postgresCreds', passwordVariable : 'DB_PASSWORD')
-                ]){
-                    sh '''
-                        set +x
-                        terraform plan -var-file="resources_dev.tfvars" --var="aws_access_key=$AWS_CREDS_USR" --var="aws_secret_key=$AWS_CREDS_PSW" --var="azure_subscription_id=$AZ_SUB_TENANT_CREDS_USR" --var="azure_client_id=$AZ_CLIENT_SECRET_CREDS_USR"  --var="azure_client_secret=$AZ_CLIENT_SECRET_CREDS_PSW" --var="azure_tenant_id=$AZ_SUB_TENANT_CREDS_PSW" --var="postgresdb_password=$DB_CREDS_PSW" --var="postgresdb_user=$DB_CREDS_USR"
-                    '''
-                }
+
+                sh '''
+                    set +x
+                    terraform plan -var-file="resources_dev.tfvars" --var="aws_access_key=$AWS_CREDS_USR" --var="aws_secret_key=$AWS_CREDS_PSW" --var="azure_subscription_id=$AZ_SUB_TENANT_CREDS_USR" --var="azure_client_id=$AZ_CLIENT_SECRET_CREDS_USR"  --var="azure_client_secret=$AZ_CLIENT_SECRET_CREDS_PSW" --var="azure_tenant_id=$AZ_SUB_TENANT_CREDS_PSW" --var="postgresdb_password=$DB_CREDS_PSW" --var="postgresdb_user=$DB_CREDS_USR"
+                '''
             }
         }
 
         stage('Terraform action') {
             steps {
-                withCredentials([
-                    usernamePassword(usernameVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'awsCreds', passwordVariable: 'AWS_SECRET_ACCESS_KEY'),
-                    usernamePassword(usernameVariable : 'AZ_SUBSCRIPTION_ID', credentialsId: 'azsubTenantCreds', passwordVariable : 'AZ_TENANT_ID'),
-                    usernamePassword(usernameVariable : 'AZ_CLIENT_ID', credentialsId: 'azClientSecretCreds', passwordVariable : 'AZ_CLIENT_SECRET'),
-                    usernamePassword(usernameVariable : 'DB_USERNAME', credentialsId: 'postgresCreds', passwordVariable : 'DB_PASSWORD')
-                ]){
-                    sh '''
-                        set +x
-                        terraform ${action} --auto-approve -var-file="resources_dev.tfvars" --var="aws_access_key=$AWS_CREDS_USR" --var="aws_secret_key=$AWS_CREDS_PSW" --var="azure_subscription_id=$AZ_SUB_TENANT_CREDS_USR" --var="azure_client_id=$AZ_CLIENT_SECRET_CREDS_USR"  --var="azure_client_secret=$AZ_CLIENT_SECRET_CREDS_PSW" --var="azure_tenant_id=$AZ_SUB_TENANT_CREDS_PSW" --var="postgresdb_password=$DB_CREDS_PSW" --var="postgresdb_user=$DB_CREDS_USR"
-                    '''
-                }
+                
+                sh '''
+                    set +x
+                    terraform ${action} --auto-approve -var-file="resources_dev.tfvars" --var="aws_access_key=$AWS_CREDS_USR" --var="aws_secret_key=$AWS_CREDS_PSW" --var="azure_subscription_id=$AZ_SUB_TENANT_CREDS_USR" --var="azure_client_id=$AZ_CLIENT_SECRET_CREDS_USR"  --var="azure_client_secret=$AZ_CLIENT_SECRET_CREDS_PSW" --var="azure_tenant_id=$AZ_SUB_TENANT_CREDS_PSW" --var="postgresdb_password=$DB_CREDS_PSW" --var="postgresdb_user=$DB_CREDS_USR"
+                '''
+                
             }
         }
         

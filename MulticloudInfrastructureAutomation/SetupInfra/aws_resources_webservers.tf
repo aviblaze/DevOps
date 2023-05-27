@@ -372,7 +372,7 @@ resource "aws_autoscaling_group" "myasg" {
 
 resource "aws_autoscaling_notification" "example_notifications" {
   group_names = [
-    aws_autoscaling_group.myasg.name
+    aws_autoscaling_group.myasg[count.index].name
   ]
 
   notifications = [
@@ -383,5 +383,6 @@ resource "aws_autoscaling_notification" "example_notifications" {
   ]
 
   topic_arn = aws_sns_topic.snstopic.arn
+  count=1
 }
 

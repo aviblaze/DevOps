@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ngnix-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    #- host: hello-world.info
+    - http:
+        paths:
+          - path: /vote
+            pathType: Prefix
+            backend:
+              service:
+                name: vote
+                port:
+                  number: 5000
+          - path: /result
+            pathType: Prefix
+            backend:
+              service:
+                name: result
+                port:
+                  number: 5001

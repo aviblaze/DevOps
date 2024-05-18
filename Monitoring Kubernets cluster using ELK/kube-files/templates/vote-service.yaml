@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: vote
+  name: vote
+spec:
+  type: NodePort
+  ports:
+  - name: "vote-service"
+    port: {{ if .Values.vote -}} {{- default 5000 .Values.vote.hostPort}} {{- else -}}5000{{- end }}
+    targetPort: {{ if .Values.vote -}} {{- default 80 .Values.vote.containerPort}} {{- else -}}80{{- end }}
+    nodePort: {{ if .Values.vote -}} {{- default 31000 .Values.vote.nodePort}} {{- else -}}31000{{- end }}
+  selector:
+    app: vote

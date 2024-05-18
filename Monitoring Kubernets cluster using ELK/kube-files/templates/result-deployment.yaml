@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: result
+  name: result
+spec:
+  replicas: {{ if .Values.development -}}{{ if .Values.result -}}{{- default 1 .Values.result.replicas -}}{{- else -}}1 {{- end }} {{- else -}}{{ if .Values.result -}}{{- default 5 .Values.result.replicas -}}{{- else -}}5{{- end }}{{- end }}
+  selector:
+    matchLabels:
+      app: result
+  template:
+    metadata:
+      labels:
+        app: result
+    spec:
+      containers:
+      - image: dockersamples/examplevotingapp_result
+        name: result
+        ports:
+        - containerPort: {{ if .Values.result -}} {{- default 80 .Values.result.containerPort}} {{- else -}}80{{- end }}
+          name: result

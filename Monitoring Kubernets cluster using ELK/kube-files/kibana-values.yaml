@@ -1,0 +1,4 @@
+---
+readinessProbe:
+    initialDelaySeconds: 240
+    periodSeconds: 120

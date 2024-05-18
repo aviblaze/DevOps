@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: redis
+  name: redis
+spec:
+  type: {{ if .Values.redis -}} {{- default "ClusterIP" .Values.redis.serviceType -}}{{- else -}}"ClusterIP"{{- end }}
+  ports:
+  - name: "redis-service"
+    port: {{ if .Values.redis -}} {{- default 6379 .Values.redis.containerPort}} {{- else -}}6379{{- end }}
+    targetPort: {{ if .Values.redis -}} {{- default 6379 .Values.redis.containerPort}} {{- else -}}6379{{- end }}
+    {{ if and .Values.redis (eq .Values.redis.serviceType "Nodeport") -}}
+    nodePort: {{ if .Values.redis -}} {{- default 31005 .Values.redis.nodePort -}}{{- else -}}31005{{- end -}}
+    {{- end }}
+  selector:
+    app: redis
+  

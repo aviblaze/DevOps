@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: redis
+  name: redis
+spec:
+  replicas: {{ if .Values.development -}}{{ if .Values.redis -}}{{- default 1 .Values.redis.replicas -}}{{- else -}}1 {{- end }} {{- else -}}{{ if .Values.redis -}}{{- default 5 .Values.redis.replicas -}}{{- else -}}5{{- end }}{{- end }}
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - image: redis:alpine
+        name: redis
+        ports:
+        - containerPort: {{ if .Values.redis -}} {{- default 6379 .Values.redis.containerPort}} {{- else -}}6379{{- end }}
+          name: redis
+        volumeMounts:
+        - mountPath: /data
+          name: {{ if .Values.redis -}} {{- default "redis-data" .Values.redis.mountName }} {{- else -}} "redis-data" {{- end }}
+      volumes:
+      - name: {{ if .Values.redis -}} {{- default "redis-data" .Values.redis.mountName }} {{- else -}} "redis-data" {{- end }}
+        emptyDir: {} 

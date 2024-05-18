@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: result
+  name: result
+  #namespace: ingress-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: result
+  template:
+    metadata:
+      labels:
+        app: result
+    spec:
+      containers:
+      - image: dockersamples/examplevotingapp_result
+        name: result
+        ports:
+        - containerPort: 80
+          name: result
+        # env:
+        # - name: SERVER
+        #   value: db   # This is the service name of your PostgreSQL pod
+        # - name: USERNAME
+        #   value: postgres            # PostgreSQL default port
+        # - name: DB
+        #   value: postgres
+        # - name: PASS
+        #   value: postgres

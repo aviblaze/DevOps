@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: vote
+  name: vote
+spec:
+  replicas: {{ if .Values.development -}}{{ if .Values.vote -}}{{- default 1 .Values.vote.replicas -}}{{- else -}}1 {{- end }} {{- else -}}{{ if .Values.vote -}}{{- default 5 .Values.vote.replicas -}}{{- else -}}5{{- end }}{{- end }}
+  selector:
+    matchLabels:
+      app: vote
+  template:
+    metadata:
+      labels:
+        app: vote
+    spec:
+      containers:
+      - image: dockersamples/examplevotingapp_vote
+        name: vote
+        ports:
+        - containerPort: {{ if .Values.vote -}} {{- default 80 .Values.vote.containerPort}} {{- else -}}80{{- end }}
+          name: vote

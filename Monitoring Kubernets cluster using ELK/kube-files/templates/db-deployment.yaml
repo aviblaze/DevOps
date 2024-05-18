@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: db
+  name: db
+spec:
+  replicas: {{ if .Values.development -}}{{ if .Values.db -}}{{- default 1 .Values.db.replicas -}}{{- else -}}1 {{- end }} {{- else -}}{{ if .Values.db -}}{{- default 5 .Values.db.replicas -}}{{- else -}}5{{- end }}{{- end }}
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+      - image: postgres:15-alpine
+        name: postgres
+        env:
+        - name: POSTGRES_USER
+          value: {{ if .Values.db -}} {{- default "postgres" .Values.db.username }} {{- else -}}"postgres"{{- end }}
+        - name: POSTGRES_PASSWORD
+          value: {{ if .Values.db -}} {{- default "postgres" .Values.db.password}} {{- else -}} "postgres" {{- end }}
+        ports:
+        - containerPort: {{ if .Values.db -}} {{- default 5432 .Values.db.containerPort}} {{- else -}}5432{{- end }}
+          name: postgres
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: {{ if .Values.db -}} {{- default "db-data" .Values.db.mountName }} {{- else -}} "db-data" {{- end }}
+      volumes:
+      - name: {{ if .Values.db -}} {{- default "db-data" .Values.db.mountName }} {{- else -}} "db-data" {{- end }}
+        emptyDir: {} 

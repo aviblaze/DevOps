@@ -346,7 +346,7 @@ resource "aws_lb_listener" "mylblistener1" {
 }
 
 resource "aws_sns_topic" "snstopic" {
-  name = "MCIA-topic"
+  name = "  "
 }
 
 resource "aws_sns_topic_subscription" "user_updates_sqs_target" {

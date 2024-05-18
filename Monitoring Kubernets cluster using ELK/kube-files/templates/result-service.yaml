@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: result
+  name: result
+spec:
+  type: NodePort
+  ports:
+  - name: "result-service"
+    port: {{ if .Values.result -}} {{- default 5001 .Values.result.hostPort}} {{- else -}}5001{{- end }}
+    targetPort: {{ if .Values.result -}} {{- default 80 .Values.result.containerPort}} {{- else -}}80{{- end }}
+    nodePort: {{ if .Values.result -}} {{- default 31001 .Values.result.nodePort}} {{- else -}}31001{{- end }}
+  selector:
+    app: result
